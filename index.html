@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ломоносовское Подворье — транспортная схема</title>
+<title>Подворье.Life — транспортная схема</title>
 <style>
 :root{
   --bg:#eef5fb; --card:#ffffff; --text:#132238; --muted:#65748a; --border:#d9e6f1;
@@ -66,15 +66,15 @@ svg{width:100%;height:100%;display:block}
 <body>
 <div class="app">
   <aside class="left">
-    <div class="brand card"><div class="icon">🏡</div><h1>ЛОМОНОСОВСКОЕ<br>ПОДВОРЬЕ</h1></div>
+    <div class="brand card"><div class="icon">🏡</div><h1>ПОДВОРЬЕ.<br>LIFE</h1></div>
     <div class="box card">
       <h3>Выберите раздел</h3>
-      <button class="btn active" data-direction="out">☀️ Порожки → Петергоф</button>
-      <button class="btn" data-direction="back">🌙 Петергоф → Порожки</button>
+      <button class="btn active" data-direction="out">☀️ Подворье.Life → Петергоф</button>
+      <button class="btn" data-direction="back">🌙 Петергоф → Подворье.Life</button>
     </div>
     <div class="box card">
       <h3>Условные обозначения</h3>
-      <div class="legend-row"><span class="home-dot">🏡</span> Ломоносовское Подворье<br><span style="margin-left:34px;color:#65748a">(остановка Порожки)</span></div>
+      <div class="legend-row"><span class="home-dot">🏡</span> Подворье.Life<br><span style="margin-left:34px;color:#65748a">(остановка Порожки)</span></div>
       <div class="legend-row"><span class="dot"></span> Промежуточные остановки</div>
       <div class="legend-row"><span class="dot big"></span> Ж/д станции</div>
     </div>
@@ -82,7 +82,7 @@ svg{width:100%;height:100%;display:block}
 
   <main class="main card">
     <div class="header">
-      <h2>Ломоносовское Подворье → Старый / Новый Петергоф → Ломоносовское Подворье</h2>
+      <h2>Подворье.Life → Старый / Новый Петергоф → Подворье.Life</h2>
       <div class="toggle">
         <button id="weekdayBtn" class="active">БУДНИ</button>
         <button id="weekendBtn" class="weekend">ВЫХОДНЫЕ</button>
@@ -98,13 +98,13 @@ svg{width:100%;height:100%;display:block}
           <rect id="backHighlight" class="direction-highlight" x="76" y="320" width="585" height="238" rx="30" fill="#fff0df"/>
 
           <rect x="48" y="274" width="166" height="62" rx="14" fill="#07883f"/>
-          <text x="131" y="299" text-anchor="middle" class="home-label">ОСТАНОВКА</text>
-          <text x="131" y="323" text-anchor="middle" class="home-label">ПОРОЖКИ</text>
+          <text x="131" y="299" text-anchor="middle" class="home-label">ПОДВОРЬЕ.</text>
+          <text x="131" y="323" text-anchor="middle" class="home-label">LIFE</text>
           <circle cx="75" cy="254" r="28" fill="#fff" stroke="#07883f" stroke-width="3"/>
           <text x="75" y="263" text-anchor="middle" font-size="29">🏡</text>
 
-          <text x="270" y="55" class="direction-title">Первая половина дня: движение к электричке</text>
-          <text x="260" y="588" class="direction-title">Вторая половина дня: возвращение от станции домой</text>
+          <text x="270" y="55" class="direction-title">Первая половина дня: Подворье.Life → Петергоф</text>
+          <text x="260" y="588" class="direction-title">Вторая половина дня: Петергоф → Подворье.Life</text>
 
           <path id="line489" class="route-line" stroke="#126ed3" d="M214 282 C315 184,445 139,590 157"/>
           <path id="line463" class="route-line" stroke="#10b5ad" d="M214 294 C330 224,448 199,590 182"/>
@@ -155,14 +155,14 @@ svg{width:100%;height:100%;display:block}
 
   <section class="bottom">
     <div class="info card">
-      <h3 id="bottomTitle1">Порожки → Петергоф</h3>
+      <h3 id="bottomTitle1">Подворье.Life → Петергоф</h3>
       <div class="info-grid">
         <div class="pill"><b>Будни</b><span id="outWeekday">первый автобус с 05:20</span></div>
         <div class="pill"><b>Выходные</b><span id="outWeekend">первый автобус с 06:40</span></div>
       </div>
     </div>
     <div class="info card">
-      <h3 id="bottomTitle2">Петергоф → Порожки</h3>
+      <h3 id="bottomTitle2">Петергоф → Подворье.Life</h3>
       <div class="info-grid">
         <div class="pill"><b>Будни</b><span id="backWeekday">возвращение ориентировочно до 22:40</span></div>
         <div class="pill"><b>Выходные</b><span id="backWeekend">возвращение ориентировочно до 21:30</span></div>
@@ -227,12 +227,12 @@ function render(){
 function selectRoute(id){selected=selected===id?null:id;render()}
 function renderDetails(){
  const d=data[mode]; const r=selected?d.routes.find(x=>x.id===selected):null;
- const title=direction==="out"?"Порожки → Петергоф":"Петергоф → Порожки";
+ const title=direction==="out"?"Подворье.Life → Петергоф":"Петергоф → Подворье.Life";
  if(!r){
-  details.innerHTML=`<div class="route-card"><h4>${title}</h4><div class="kv"><span>Режим</span><b>${d.label}</b></div><div class="kv"><span>${direction==="out"?"Начало движения":"Позднее возвращение"}</span><b>${direction==="out"?d.first:d.last}</b></div><div class="kv"><span>Логика</span><b>можно выбрать ближайший подходящий автобус</b></div></div><div class="mini-title">Как читать схему</div><div class="step"><span>1</span><p>${direction==="out"?"В первой половине дня смотрим автобусы от Порожков до станций Петергофа.":"Во второй половине дня смотрим обратное движение от станций Петергофа к Порожкам."}</p></div><div class="step"><span>2</span><p>Нажмите на конкретный маршрут слева, чтобы подсветить его на схеме.</p></div><div class="step"><span>3</span><p>Ориентир времени на автобусе между Порожками и станцией: около 25–35 минут.</p></div>`;
+  details.innerHTML=`<div class="route-card"><h4>${title}</h4><div class="kv"><span>Режим</span><b>${d.label}</b></div><div class="kv"><span>${direction==="out"?"Начало движения":"Позднее возвращение"}</span><b>${direction==="out"?d.first:d.last}</b></div><div class="kv"><span>Логика</span><b>можно выбрать ближайший подходящий автобус</b></div></div><div class="mini-title">Как читать схему</div><div class="step"><span>1</span><p>${direction==="out"?"В первой половине дня смотрим автобусы от Подворье.Life до станций Петергофа.":"Во второй половине дня смотрим обратное движение от станций Петергофа к Подворье.Life."}</p></div><div class="step"><span>2</span><p>Нажмите на конкретный маршрут слева, чтобы подсветить его на схеме.</p></div><div class="step"><span>3</span><p>Ориентир времени на автобусе между Порожками и станцией: около 25–35 минут.</p></div>`;
   return;
  }
- details.innerHTML=`<div class="route-card"><h4 style="color:${r.color}">Маршрут ${r.id}</h4><div class="kv"><span>Направление</span><b>${r.name}</b></div><div class="kv"><span>Интервал</span><b>${r.interval}</b></div><div class="kv"><span>${direction==="out"?"Утром от Порожков":"Вечером к Порожкам"}</span><b>${direction==="out"?r.out:r.back}</b></div><div class="kv"><span>Через</span><b>${r.via}</b></div><div class="kv"><span>Ж/д станция</span><b>${r.station}</b></div><div class="kv"><span>Режим</span><b>${d.label}</b></div></div><div class="mini-title">Сценарий</div><div class="step"><span>${direction==="out"?"☀️":"🌙"}</span><p>${direction==="out"?"От остановки Порожки едем до станции Петергофа и дальше пересаживаемся на электричку.":"После электрички выходим у станции Петергофа и возвращаемся автобусом до Порожков."}</p></div><button class="action" onclick="selected=null;render()">Показать все маршруты</button>`;
+ details.innerHTML=`<div class="route-card"><h4 style="color:${r.color}">Маршрут ${r.id}</h4><div class="kv"><span>Направление</span><b>${r.name}</b></div><div class="kv"><span>Интервал</span><b>${r.interval}</b></div><div class="kv"><span>${direction==="out"?"Утром от Подворье.Life":"Вечером к Подворье.Life"}</span><b>${direction==="out"?r.out:r.back}</b></div><div class="kv"><span>Через</span><b>${r.via}</b></div><div class="kv"><span>Ж/д станция</span><b>${r.station}</b></div><div class="kv"><span>Режим</span><b>${d.label}</b></div></div><div class="mini-title">Сценарий</div><div class="step"><span>${direction==="out"?"☀️":"🌙"}</span><p>${direction==="out"?"От остановки Порожки едем до станции Петергофа и дальше пересаживаемся на электричку.":"После электрички выходим у станции Петергофа и возвращаемся автобусом до Порожков."}</p></div><button class="action" onclick="selected=null;render()">Показать все маршруты</button>`;
 }
 weekdayBtn.onclick=()=>{mode="weekday";selected=null;render()}; weekendBtn.onclick=()=>{mode="weekend";selected=null;render()};
 document.querySelectorAll(".btn").forEach(b=>b.onclick=()=>{direction=b.dataset.direction;selected=null;render()});
