@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ломоносовское Подворье — транспортная схема</title>
+<style>
+:root{
+  --bg:#eef5fb; --card:#ffffff; --text:#132238; --muted:#65748a; --border:#d9e6f1;
+  --green:#07883f; --blue:#126ed3; --teal:#10b5ad; --purple:#8d42c9; --orange:#ff7900;
+  --yellow:#f5c400; --pink:#ec3d93; --lime:#5fbf3e; --brown:#8c531f; --morning:#e7f4ff; --evening:#fff0e2;
+  --shadow:0 14px 38px rgba(19,34,56,.10);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Arial,sans-serif;background:linear-gradient(135deg,#eaf3fc,#f8fbff);color:var(--text)}
+.app{min-height:100vh;padding:16px;display:grid;grid-template-columns:250px minmax(760px,1fr) 315px;gap:14px}
+.card{background:rgba(255,255,255,.95);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow)}
+.left{display:flex;flex-direction:column;gap:12px}
+.brand{background:linear-gradient(135deg,#07883f,#00692e);color:white;text-align:center;padding:20px;border-radius:18px}
+.brand .icon{font-size:34px}.brand h1{font-size:20px;line-height:1.12;margin:8px 0 0;font-weight:900}
+.box{padding:14px}.box h3,.details h3{font-size:13px;margin:0 0 10px;text-transform:uppercase;letter-spacing:.02em}
+.btn{width:100%;border:1px solid var(--border);background:white;border-radius:12px;padding:12px;margin:7px 0;text-align:left;font-weight:850;color:#17304d;cursor:pointer;transition:.18s;display:flex;gap:9px;align-items:center}
+.btn:hover,.btn.active{background:var(--green);color:white;transform:translateY(-1px)}
+.legend-row{display:flex;align-items:center;gap:10px;margin:13px 0;color:#30435b;font-size:14px}
+.dot{width:14px;height:14px;border:2px solid #0f2f52;border-radius:50%;background:#fff}
+.dot.big{width:23px;height:23px;border-width:5px}
+.home-dot{width:24px;height:24px;border-radius:8px;background:#07883f;display:flex;align-items:center;justify-content:center;color:white;font-size:15px}
+
+.main{padding:18px;min-width:0;display:flex;flex-direction:column}
+.header{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+h2{margin:0;font-size:28px;line-height:1.12;font-weight:950;letter-spacing:-.03em;max-width:860px}
+.toggle{display:flex;background:white;border:1px solid var(--border);border-radius:13px;overflow:hidden;min-width:250px;height:46px}
+.toggle button{flex:1;border:0;background:white;font-weight:950;cursor:pointer;font-size:14px}.toggle button.active{background:var(--green);color:white}.toggle .weekend.active{background:#dc2b2b}
+
+.content{display:grid;grid-template-columns:280px minmax(0,1fr);gap:14px;align-items:stretch;margin-top:14px}
+.routes{max-height:650px;overflow:auto;padding-right:2px}
+.route-item{display:grid;grid-template-columns:62px 1fr 72px;gap:8px;align-items:center;padding:8px;border-radius:13px;cursor:pointer;transition:.18s;margin:6px 0;background:#fff;border:1px solid #e3edf7}
+.route-item:hover,.route-item.active{border-color:#a7c7e6;transform:translateX(2px);box-shadow:0 6px 16px rgba(21,45,75,.08)}
+.badge{color:#fff;border-radius:8px;padding:7px 6px;text-align:center;font-weight:950;font-size:17px}.route-name{font-size:13px;line-height:1.15}.interval{font-size:12px;text-align:center;border:1px solid currentColor;border-radius:8px;padding:6px 3px;font-weight:950;background:#fff}
+
+.scheme{position:relative;border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,#f9fcff,#eef7ff);min-height:650px;overflow:hidden}
+svg{width:100%;height:100%;display:block}
+.direction-highlight{opacity:0;transition:.2s}
+.direction-highlight.show{opacity:.72}
+.route-line{fill:none;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;cursor:pointer;transition:.22s;opacity:.92}
+.route-line.dim{opacity:.12;stroke-width:5}.route-line.active{stroke-width:12;filter:drop-shadow(0 0 8px rgba(0,0,0,.22));opacity:1}
+.return-line{fill:none;stroke:#7a8797;stroke-width:5;stroke-dasharray:10 10;stroke-linecap:round;opacity:.18;transition:.2s}
+.return-line.show{opacity:.95;stroke:#0f2f52;filter:drop-shadow(0 0 5px rgba(0,0,0,.15))}
+.stop{fill:white;stroke:#0f2f52;stroke-width:2}.hub{fill:#fff;stroke:#0f2f52;stroke-width:5}.hub-inner{fill:#0f5c98}
+.label{font-size:14px;fill:#24364d;font-weight:750}.small{font-size:12px;fill:#50657d}.station-label{font-size:17px;font-weight:950;fill:#10243f}.home-label{font-size:18px;font-weight:950;fill:white}
+.arrow{font-size:20px;font-weight:900;fill:#0f2f52}.direction-title{font-size:15px;font-weight:950;fill:#0f2f52}
+
+.right{min-width:0}.details{padding:15px;position:sticky;top:16px}
+.route-card{padding:14px;border:1px solid #e1ebf5;border-radius:15px;margin-bottom:12px;background:#fff}
+.route-card h4{margin:0 0 8px;font-size:22px}.kv{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #d9e3ee;padding:8px 0;font-size:14px}.kv:last-child{border-bottom:0}.kv b{text-align:right}
+.mini-title{font-size:13px;text-transform:uppercase;color:#58697d;font-weight:950;margin:14px 0 7px}
+.step{display:flex;gap:10px;align-items:flex-start;padding:9px;border-radius:12px;background:#f5f8fb;margin:8px 0}.step span{font-size:21px}.step p{margin:0;font-size:14px;line-height:1.25}
+.action{width:100%;border:0;background:var(--green);color:#fff;border-radius:12px;padding:12px;font-weight:950;margin-top:8px;cursor:pointer}
+
+.bottom{grid-column:1/4;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.info{padding:14px}.info h3{margin:0 0 10px;color:#095faf;font-size:15px}.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pill{background:#fff;border:1px solid #dce7f2;border-radius:12px;padding:10px;font-size:13px}.pill b{display:block;margin-bottom:5px}
+.notice{font-size:12px;color:#65748a;line-height:1.35;margin-top:8px}
+@media(max-width:1180px){.app{grid-template-columns:1fr}.bottom{grid-column:1;grid-template-columns:1fr}.content{grid-template-columns:1fr}.routes{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:5px;max-height:none}.details{position:static}.scheme{height:650px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="left">
+    <div class="brand card"><div class="icon">🏡</div><h1>ЛОМОНОСОВСКОЕ<br>ПОДВОРЬЕ</h1></div>
+    <div class="box card">
+      <h3>Выберите раздел</h3>
+      <button class="btn active" data-direction="out">☀️ Порожки → Петергоф</button>
+      <button class="btn" data-direction="back">🌙 Петергоф → Порожки</button>
+    </div>
+    <div class="box card">
+      <h3>Условные обозначения</h3>
+      <div class="legend-row"><span class="home-dot">🏡</span> Ломоносовское Подворье<br><span style="margin-left:34px;color:#65748a">(остановка Порожки)</span></div>
+      <div class="legend-row"><span class="dot"></span> Промежуточные остановки</div>
+      <div class="legend-row"><span class="dot big"></span> Ж/д станции</div>
+    </div>
+  </aside>
+
+  <main class="main card">
+    <div class="header">
+      <h2>Ломоносовское Подворье → Старый / Новый Петергоф → Ломоносовское Подворье</h2>
+      <div class="toggle">
+        <button id="weekdayBtn" class="active">БУДНИ</button>
+        <button id="weekendBtn" class="weekend">ВЫХОДНЫЕ</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="routes" id="routeList"></div>
+
+      <div class="scheme">
+        <svg viewBox="0 0 780 630" preserveAspectRatio="xMidYMid meet">
+          <rect id="outHighlight" class="direction-highlight show" x="76" y="70" width="585" height="235" rx="30" fill="#dff4ff"/>
+          <rect id="backHighlight" class="direction-highlight" x="76" y="320" width="585" height="238" rx="30" fill="#fff0df"/>
+
+          <rect x="48" y="274" width="166" height="62" rx="14" fill="#07883f"/>
+          <text x="131" y="299" text-anchor="middle" class="home-label">ОСТАНОВКА</text>
+          <text x="131" y="323" text-anchor="middle" class="home-label">ПОРОЖКИ</text>
+          <circle cx="75" cy="254" r="28" fill="#fff" stroke="#07883f" stroke-width="3"/>
+          <text x="75" y="263" text-anchor="middle" font-size="29">🏡</text>
+
+          <text x="270" y="55" class="direction-title">Первая половина дня: движение к электричке</text>
+          <text x="260" y="588" class="direction-title">Вторая половина дня: возвращение от станции домой</text>
+
+          <path id="line489" class="route-line" stroke="#126ed3" d="M214 282 C315 184,445 139,590 157"/>
+          <path id="line463" class="route-line" stroke="#10b5ad" d="M214 294 C330 224,448 199,590 182"/>
+          <path id="line463A" class="route-line" stroke="#8d42c9" d="M214 306 C330 264,455 242,590 215 C640 242,653 297,612 330"/>
+          <path id="line682" class="route-line" stroke="#ff7900" d="M214 318 C325 307,430 304,590 327"/>
+          <path id="line683" class="route-line" stroke="#f5c400" d="M214 330 C325 347,430 358,590 350"/>
+          <path id="line684" class="route-line" stroke="#ec3d93" d="M214 342 C320 389,430 399,590 373"/>
+          <path id="line685A" class="route-line" stroke="#5fbf3e" d="M214 354 C320 432,445 440,590 396"/>
+          <path id="line686" class="route-line" stroke="#8c531f" d="M214 366 C330 477,465 470,590 419"/>
+
+          <path id="return489" class="return-line" d="M590 157 C445 139,315 184,214 282"/>
+          <path id="return463" class="return-line" d="M590 182 C448 199,330 224,214 294"/>
+          <path id="return463A" class="return-line" d="M612 330 C653 297,640 242,590 215 C455 242,330 264,214 306"/>
+          <path id="return682" class="return-line" d="M590 327 C430 304,325 307,214 318"/>
+          <path id="return683" class="return-line" d="M590 350 C430 358,325 347,214 330"/>
+          <path id="return684" class="return-line" d="M590 373 C430 399,320 389,214 342"/>
+          <path id="return685A" class="return-line" d="M590 396 C445 440,320 432,214 354"/>
+          <path id="return686" class="return-line" d="M590 419 C465 470,330 477,214 366"/>
+
+          <g id="stops"></g>
+
+          <circle class="hub" cx="610" cy="178" r="28"/><circle class="hub-inner" cx="610" cy="178" r="10"/>
+          <text x="642" y="170" class="station-label">СТАРЫЙ</text>
+          <text x="642" y="192" class="station-label">ПЕТЕРГОФ</text>
+          <text x="642" y="220" font-size="24">🚉</text>
+
+          <circle class="hub" cx="610" cy="362" r="28"/><circle class="hub-inner" cx="610" cy="362" r="10"/>
+          <text x="642" y="354" class="station-label">НОВЫЙ</text>
+          <text x="642" y="376" class="station-label">ПЕТЕРГОФ</text>
+          <text x="642" y="404" font-size="24">🚉</text>
+
+          <path d="M610 206 C610 247,610 292,610 334" fill="none" stroke="#bfd1e0" stroke-width="6" stroke-dasharray="10 9"/>
+          <text x="628" y="278" class="small">пересадка на электричку</text>
+
+          <text id="outArrow" x="385" y="116" class="arrow">→ → →</text>
+          <text id="backArrow" x="345" y="540" class="arrow" opacity=".25">← ← ←</text>
+        </svg>
+      </div>
+    </div>
+  </main>
+
+  <aside class="right">
+    <div class="details card">
+      <h3>Расписание и детали</h3>
+      <div id="details"></div>
+    </div>
+  </aside>
+
+  <section class="bottom">
+    <div class="info card">
+      <h3 id="bottomTitle1">Порожки → Петергоф</h3>
+      <div class="info-grid">
+        <div class="pill"><b>Будни</b><span id="outWeekday">первый автобус с 05:20</span></div>
+        <div class="pill"><b>Выходные</b><span id="outWeekend">первый автобус с 06:40</span></div>
+      </div>
+    </div>
+    <div class="info card">
+      <h3 id="bottomTitle2">Петергоф → Порожки</h3>
+      <div class="info-grid">
+        <div class="pill"><b>Будни</b><span id="backWeekday">возвращение ориентировочно до 22:40</span></div>
+        <div class="pill"><b>Выходные</b><span id="backWeekend">возвращение ориентировочно до 21:30</span></div>
+      </div>
+      <div class="notice">Время и интервалы указаны как ориентировочная транспортная модель. Перед поездкой расписание лучше сверить с актуальным сервисом транспорта.</div>
+    </div>
+  </section>
+</div>
+
+<script>
+const data={
+ weekday:{label:"Будни",first:"с 05:20",last:"до 22:40",routes:[
+  {id:"489",color:"#126ed3",name:"Петергоф — Гостилицы",interval:"15–25 мин",out:"с 07:00",back:"до 21:30",station:"Старый Петергоф",via:"Марьино, Разбегаево"},
+  {id:"463",color:"#10b5ad",name:"Петергоф — 5 км бетонной дороги",interval:"20–30 мин",out:"с 05:20",back:"до 21:10",station:"Старый Петергоф",via:"Ропша, Кипень"},
+  {id:"463A",color:"#8d42c9",name:"Петергоф — Лопухинка",interval:"15–25 мин",out:"с 06:40",back:"до 22:40",station:"Старый / Новый Петергоф",via:"Гостилицы, Оржицы"},
+  {id:"682",color:"#ff7900",name:"Ломоносов — 4 км бетонной дороги",interval:"20–35 мин",out:"с 06:50",back:"до 21:20",station:"Новый Петергоф",via:"Низино, Жилгородок"},
+  {id:"683",color:"#f5c400",name:"Ломоносов — Клясино",interval:"30–40 мин",out:"с 07:20",back:"до 21:00",station:"Новый Петергоф",via:"Низино, Ольгино"},
+  {id:"684",color:"#ec3d93",name:"Ломоносов — 5 км бетонной дороги",interval:"30–40 мин",out:"с 07:10",back:"до 20:50",station:"Новый Петергоф",via:"Низино, Кипень"},
+  {id:"685A",color:"#5fbf3e",name:"Ломоносов — Глобицы",interval:"25–35 мин",out:"с 07:00",back:"до 21:30",station:"Новый Петергоф",via:"Низино, Гостилицы"},
+  {id:"686",color:"#8c531f",name:"Ломоносов — Горки",interval:"25–35 мин",out:"с 06:50",back:"до 21:20",station:"Новый Петергоф",via:"Низино, Разбегаево"}]},
+ weekend:{label:"Выходные",first:"с 06:40",last:"до 21:30",routes:[
+  {id:"489",color:"#126ed3",name:"Петергоф — Гостилицы",interval:"20–30 мин",out:"с 07:10",back:"до 21:20",station:"Старый Петергоф",via:"Марьино, Разбегаево"},
+  {id:"463A",color:"#8d42c9",name:"Петергоф — Лопухинка",interval:"20–30 мин",out:"с 06:40",back:"до 21:30",station:"Старый / Новый Петергоф",via:"Гостилицы, Оржицы"},
+  {id:"682",color:"#ff7900",name:"Ломоносов — 4 км бетонной дороги",interval:"25–35 мин",out:"с 07:00",back:"до 21:00",station:"Новый Петергоф",via:"Низино, Жилгородок"},
+  {id:"683",color:"#f5c400",name:"Ломоносов — Клясино",interval:"30–40 мин",out:"с 07:30",back:"до 20:30",station:"Новый Петергоф",via:"Низино, Ольгино"},
+  {id:"684",color:"#ec3d93",name:"Ломоносов — 5 км бетонной дороги",interval:"30–40 мин",out:"с 07:20",back:"до 20:40",station:"Новый Петергоф",via:"Низино, Кипень"},
+  {id:"685A",color:"#5fbf3e",name:"Ломоносов — Глобицы",interval:"25–35 мин",out:"с 07:10",back:"до 21:20",station:"Новый Петергоф",via:"Низино, Гостилицы"},
+  {id:"686",color:"#8c531f",name:"Ломоносов — Горки",interval:"25–35 мин",out:"с 07:00",back:"до 21:10",station:"Новый Петергоф",via:"Низино, Разбегаево"}]}
+};
+
+let mode="weekday", selected=null, direction="out";
+function renderStops(){
+ const stops=[
+  [330,217,"Марьино"],[450,170,"Разбегаево"],[345,254,"Ропша"],[470,217,"Кипень"],
+  [345,294,"Гостилицы"],[475,257,"Оржицы"],[340,336,"Низино"],[474,317,"Жилгородок"],
+  [340,373,"Низино"],[475,357,"Ольгино"],[340,412,"Низино"],[475,397,"Кипень"],
+  [345,452,"Низино"],[475,437,"Гостилицы"],[350,492,"Низино"],[475,477,"Разбегаево"]
+ ];
+ document.getElementById("stops").innerHTML=stops.map(([x,y,t])=>`<circle class="stop" cx="${x}" cy="${y}" r="7"/><text x="${x-28}" y="${y-14}" class="label">${t}</text>`).join("");
+}
+function render(){
+ const d=data[mode];
+ weekdayBtn.classList.toggle("active",mode==="weekday"); weekendBtn.classList.toggle("active",mode==="weekend");
+ document.querySelectorAll(".btn").forEach(b=>b.classList.toggle("active",b.dataset.direction===direction));
+ outHighlight.classList.toggle("show",direction==="out"); backHighlight.classList.toggle("show",direction==="back");
+ outArrow.setAttribute("opacity",direction==="out"?"1":".25"); backArrow.setAttribute("opacity",direction==="back"?"1":".25");
+ routeList.innerHTML=d.routes.map(r=>`<div class="route-item ${selected===r.id?'active':''}" onclick="selectRoute('${r.id}')"><div class="badge" style="background:${r.color}">${r.id}</div><div class="route-name">${r.name}</div><div class="interval" style="color:${r.color}">${direction==="out"?r.out:r.back}</div></div>`).join("");
+ document.querySelectorAll(".route-line").forEach(el=>{
+  const id=el.id.replace("line",""); const exists=d.routes.some(r=>r.id===id);
+  el.style.display=exists?"block":"none";
+  el.classList.toggle("dim",(selected&&selected!==id)||direction==="back");
+  el.classList.toggle("active",selected===id&&direction==="out");
+ });
+ document.querySelectorAll(".return-line").forEach(el=>{
+  const id=el.id.replace("return",""); const exists=d.routes.some(r=>r.id===id);
+  el.style.display=exists?"block":"none";
+  el.classList.toggle("show",direction==="back" && (!selected || selected===id));
+  if(direction==="back" && selected && selected!==id){el.style.opacity=".08"} else {el.style.opacity=""}
+ });
+ renderDetails();
+}
+function selectRoute(id){selected=selected===id?null:id;render()}
+function renderDetails(){
+ const d=data[mode]; const r=selected?d.routes.find(x=>x.id===selected):null;
+ const title=direction==="out"?"Порожки → Петергоф":"Петергоф → Порожки";
+ if(!r){
+  details.innerHTML=`<div class="route-card"><h4>${title}</h4><div class="kv"><span>Режим</span><b>${d.label}</b></div><div class="kv"><span>${direction==="out"?"Начало движения":"Позднее возвращение"}</span><b>${direction==="out"?d.first:d.last}</b></div><div class="kv"><span>Логика</span><b>можно выбрать ближайший подходящий автобус</b></div></div><div class="mini-title">Как читать схему</div><div class="step"><span>1</span><p>${direction==="out"?"В первой половине дня смотрим автобусы от Порожков до станций Петергофа.":"Во второй половине дня смотрим обратное движение от станций Петергофа к Порожкам."}</p></div><div class="step"><span>2</span><p>Нажмите на конкретный маршрут слева, чтобы подсветить его на схеме.</p></div><div class="step"><span>3</span><p>Ориентир времени на автобусе между Порожками и станцией: около 25–35 минут.</p></div>`;
+  return;
+ }
+ details.innerHTML=`<div class="route-card"><h4 style="color:${r.color}">Маршрут ${r.id}</h4><div class="kv"><span>Направление</span><b>${r.name}</b></div><div class="kv"><span>Интервал</span><b>${r.interval}</b></div><div class="kv"><span>${direction==="out"?"Утром от Порожков":"Вечером к Порожкам"}</span><b>${direction==="out"?r.out:r.back}</b></div><div class="kv"><span>Через</span><b>${r.via}</b></div><div class="kv"><span>Ж/д станция</span><b>${r.station}</b></div><div class="kv"><span>Режим</span><b>${d.label}</b></div></div><div class="mini-title">Сценарий</div><div class="step"><span>${direction==="out"?"☀️":"🌙"}</span><p>${direction==="out"?"От остановки Порожки едем до станции Петергофа и дальше пересаживаемся на электричку.":"После электрички выходим у станции Петергофа и возвращаемся автобусом до Порожков."}</p></div><button class="action" onclick="selected=null;render()">Показать все маршруты</button>`;
+}
+weekdayBtn.onclick=()=>{mode="weekday";selected=null;render()}; weekendBtn.onclick=()=>{mode="weekend";selected=null;render()};
+document.querySelectorAll(".btn").forEach(b=>b.onclick=()=>{direction=b.dataset.direction;selected=null;render()});
+document.querySelectorAll(".route-line").forEach(el=>el.onclick=()=>selectRoute(el.id.replace("line","")));
+document.querySelectorAll(".return-line").forEach(el=>el.onclick=()=>selectRoute(el.id.replace("return","")));
+renderStops();render();
+</script>
+</body>
+</html>
